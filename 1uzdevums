@@ -1,0 +1,13 @@
+$documentsPath = [Environment]::GetFolderPath('MyDocuments')
+
+$outputFile = Join-Path $documentsPath 'LielieProcesi.csv'
+
+$procesi = Get-Process |
+    Where-Object {
+        $_.WorkingSet64 -gt 150MB -and $_.Name -ne 'msedge'
+    } |
+    Select-Object Name, Id, WorkingSet64
+
+$procesi | Export-Csv -Path $outputFile -NoTypeInformation -Encoding UTF8
+
+Write-Host "Fails izveidots: $outputFile"
