@@ -1,0 +1,21 @@
+$downloads = [Environment]::GetFolderPath("UserProfile") + "\Downloads"
+$documents = [Environment]::GetFolderPath("MyDocuments")
+$zipFile = Join-Path $documents "PDF_Backup.zip"
+
+$timeLimit = (Get-Date).AddHours(-48)
+
+$pdfFiles = Get-ChildItem $downloads -Filter *.pdf | Where-Object {
+    $_.CreationTime -gt $timeLimit -or $_.LastWriteTime -gt $timeLimit
+}
+
+if (Test-Path $zipFile) {
+    Remove-Item $zipFile -Force
+}
+
+if ($pdfFiles.Count -gt 0) {
+    Compress-Archive -Path $pdfFiles.FullName -DestinationPath $zipFile
+    Write-Output "Arhivs izveidots: $zipFile"
+}
+else {
+    Write-Output "Nav atrasts neviens PDF fails pēdējo 48 stundu laikā."
+}
