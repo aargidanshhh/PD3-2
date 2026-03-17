@@ -1,0 +1,22 @@
+$doc = [Environment]::GetFolderPath('MyDocuments')
+$file = "$doc\Warnings.txt"
+
+$start = (Get-Date).AddDays(-3)
+
+$warnings = Get-WinEvent -FilterHashtable @{
+    LogName='Application'
+    Level=3
+    StartTime=$start
+}
+
+$warnings | Select TimeCreated, ProviderName, Id, Message | Out-File $file
+
+"`nTOP 3 AVOTI:" | Out-File $file -Append
+
+$warnings |
+    Group-Object ProviderName |
+    Sort-Object Count -Descending |
+    Select-Object -First 3 |
+    ForEach-Object {
+        "$($_.Name) - $($_.Count)"
+    } | Out-File $file -Append
