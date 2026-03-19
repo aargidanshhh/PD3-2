@@ -1,0 +1,9 @@
+$criptpath = "$home\desktop\5_programmatura.ps1"
+
+@'
+$apps = winget list --sorce msstore | Where-objet { $_ -match '\s'} | Select-object -Skip 2
+
+$count = $apps.count
+
+Write-output "sistema ir insteletas $count aplikacijas no microsoft store."
+'@ | set-content -path $criptpath -encoding UFT8
