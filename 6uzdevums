@@ -1,0 +1,14 @@
+$criptpath = "$home\desktop\6_apkope.ps1"
+
+@'
+$documents = [environment]: :getfolderpath("mydocuments")
+$logfile = join-path $documents "servisi.log"
+
+$services = "spooler", "wuauserv"
+
+foreach ($servicename in $services) {
+$service = get-service -name $servicename
+$date = get-date -format "yyyy-MM-dd HH:mm:ss"
+"[$date] Serviss $($ervice.name) ir $($service.status)." | out-file $logfile -append
+}
+'@ | set-conter -path $criptpath -encoding UTF8
